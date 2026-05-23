@@ -38,11 +38,11 @@
   </g>
 
   <g fill="#f7efe0" font-family="Georgia, 'Times New Roman', serif" font-size="42" opacity="0.16">
-    <text x="1040" y="192">13</text>
-    <text x="1544" y="196">07</text>
-    <text x="1134" y="750">XII</text>
-    <text x="136" y="416">4 8 15 16 23 42</text>
-    <text x="1010" y="1034">A1 Z26</text>
+    <text x="1040" y="192">06</text>
+    <text x="1544" y="196">06</text>
+    <text x="1134" y="750">XX</text>
+    <text x="136" y="416">6 6 20 06 20</text>
+    <text x="1010" y="1034">H4PPY B1R7HD4Y</text>
     <text x="360" y="892">R U R' U'</text>
   </g>
 
@@ -55,7 +55,7 @@
   </g>
 
   <g fill="none" stroke="#f7efe0" stroke-width="2" opacity="0.14">
-    <rect x="1048" y="502" width="170" height="170" rx="6" transform="rotate(12 1133 587)"/>
+    <path d="M1134 666C1048 598 1002 550 1002 488c0-46 32-80 76-80 26 0 49 13 64 36 15-23 38-36 64-36 44 0 76 34 76 80 0 62-46 110-132 178l-16 12z" transform="rotate(12 1142 543)"/>
     <rect x="280" y="206" width="126" height="126" rx="6" transform="rotate(-10 343 269)"/>
     <path d="M488 748l72-124 72 124z"/>
     <path d="M784 214l98 56-98 56-98-56z"/>
