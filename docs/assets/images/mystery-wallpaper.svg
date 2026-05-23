@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-label="Mysterious puzzle wallpaper of cogs, numbers, symbols, and faint lines">
+  <defs>
+    <radialGradient id="glow" cx="68%" cy="36%" r="64%">
+      <stop offset="0" stop-color="#4d5f77"/>
+      <stop offset="0.38" stop-color="#1b2532"/>
+      <stop offset="1" stop-color="#080b10"/>
+    </radialGradient>
+    <pattern id="dots" width="42" height="42" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#f0c776" opacity="0.18"/>
+    </pattern>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+  </defs>
+
+  <rect width="1800" height="1200" fill="url(#glow)"/>
+  <rect width="1800" height="1200" fill="url(#dots)" opacity="0.7"/>
+
+  <g fill="none" stroke="#f0c776" stroke-width="2" opacity="0.2">
+    <path d="M102 160H492L620 286H1010"/>
+    <path d="M1370 92V328L1248 450V702"/>
+    <path d="M260 1030H742L858 914H1324"/>
+    <path d="M1510 940L1390 820H1004L884 700H520"/>
+    <path d="M120 642H340L430 552H738"/>
+  </g>
+
+  <g fill="none" stroke="#d7a854" stroke-width="4" opacity="0.28">
+    <circle cx="1334" cy="346" r="154"/>
+    <circle cx="1334" cy="346" r="106"/>
+    <circle cx="1334" cy="346" r="54"/>
+    <path d="M1334 174v-56M1334 574v-56M1162 346h-56M1562 346h-56M1212 224l-40-40M1496 508l-40-40M1212 468l-40 40M1496 184l-40 40"/>
+  </g>
+
+  <g fill="none" stroke="#b7c6d9" stroke-width="3" opacity="0.16">
+    <circle cx="1508" cy="812" r="118"/>
+    <circle cx="1508" cy="812" r="78"/>
+    <path d="M1508 676v-50M1508 998v-50M1372 812h-50M1694 812h-50M1412 716l-36-36M1640 944l-36-36M1412 908l-36 36M1640 680l-36 36"/>
+  </g>
+
+  <g fill="#f7efe0" font-family="Georgia, 'Times New Roman', serif" font-size="42" opacity="0.16">
+    <text x="1040" y="192">13</text>
+    <text x="1544" y="196">07</text>
+    <text x="1134" y="750">XII</text>
+    <text x="136" y="416">4 8 15 16 23 42</text>
+    <text x="1010" y="1034">A1 Z26</text>
+    <text x="360" y="892">R U R' U'</text>
+  </g>
+
+  <g fill="#d7a854" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" opacity="0.2">
+    <text x="1134" y="594">?</text>
+    <text x="1588" y="610">#</text>
+    <text x="684" y="378">+</text>
+    <text x="300" y="686">&amp;</text>
+    <text x="892" y="836">*</text>
+  </g>
+
+  <g fill="none" stroke="#f7efe0" stroke-width="2" opacity="0.14">
+    <rect x="1048" y="502" width="170" height="170" rx="6" transform="rotate(12 1133 587)"/>
+    <rect x="280" y="206" width="126" height="126" rx="6" transform="rotate(-10 343 269)"/>
+    <path d="M488 748l72-124 72 124z"/>
+    <path d="M784 214l98 56-98 56-98-56z"/>
+  </g>
+
+  <g filter="url(#soft)" opacity="0.18">
+    <circle cx="1238" cy="244" r="6" fill="#f0c776"/>
+    <circle cx="1542" cy="424" r="5" fill="#f0c776"/>
+    <circle cx="726" cy="552" r="4" fill="#f7efe0"/>
+    <circle cx="1012" cy="912" r="5" fill="#f0c776"/>
+  </g>
+</svg>
