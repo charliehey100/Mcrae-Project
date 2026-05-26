@@ -91,6 +91,20 @@ body::after {
   max-width: 12ch;
 }
 
+.stage-intro.compact {
+  padding: clamp(18px, 3vw, 26px);
+}
+
+.stage-intro.compact h1 {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  max-width: none;
+  text-transform: uppercase;
+}
+
 .stage-intro p:not(.kicker),
 .answer-panel p,
 .video-note {
@@ -195,6 +209,158 @@ code {
   font-weight: 800;
 }
 
+.script-placeholder {
+  background: rgba(247, 239, 224, 0.055);
+  border: 1px dashed rgba(240, 199, 118, 0.46);
+  border-radius: 8px;
+  margin: 24px 0;
+  padding: clamp(18px, 3vw, 26px);
+}
+
+.script-placeholder h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  line-height: 1.1;
+  margin: 0 0 12px;
+}
+
+.script-copy {
+  color: var(--muted);
+  display: grid;
+  font-size: 0.96rem;
+  gap: 10px;
+  line-height: 1.55;
+  margin-top: 18px;
+}
+
+.script-copy p,
+.script-copy ol {
+  margin: 0;
+}
+
+.script-copy ol {
+  padding-left: 22px;
+}
+
+.script-copy li + li {
+  margin-top: 6px;
+}
+
+.booking-board {
+  display: grid;
+  gap: 18px;
+  margin: 26px 0 18px;
+}
+
+.booking-slots,
+.booking-pool {
+  display: grid;
+  gap: 10px;
+}
+
+.booking-slots {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.booking-slot {
+  align-items: stretch;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(247, 239, 224, 0.18);
+  border-radius: 8px;
+  display: flex;
+  min-height: 78px;
+  padding: 8px;
+  position: relative;
+}
+
+.booking-slot.ready {
+  border-color: var(--gold-bright);
+}
+
+.booking-slot > span {
+  color: rgba(247, 239, 224, 0.28);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  left: 12px;
+  line-height: 1;
+  pointer-events: none;
+  position: absolute;
+  top: 10px;
+}
+
+.booking-pool {
+  background: rgba(247, 239, 224, 0.04);
+  border: 1px solid rgba(247, 239, 224, 0.12);
+  border-radius: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-height: 98px;
+  padding: 10px;
+}
+
+.booking-card {
+  align-items: center;
+  background: linear-gradient(180deg, rgba(247, 239, 224, 0.13), rgba(247, 239, 224, 0.07));
+  border: 1px solid rgba(240, 199, 118, 0.34);
+  border-radius: 6px;
+  color: var(--paper);
+  cursor: grab;
+  display: flex;
+  font: inherit;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 60px;
+  padding: 10px 12px;
+  text-align: center;
+  width: 100%;
+}
+
+.booking-card:active {
+  cursor: grabbing;
+}
+
+.booking-card.dragging,
+.booking-card.selected {
+  background: rgba(240, 199, 118, 0.2);
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 0 2px rgba(240, 199, 118, 0.18);
+}
+
+.board-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.board-actions button {
+  background: var(--gold);
+  border: 0;
+  border-radius: 6px;
+  color: #14100a;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  min-height: 52px;
+  padding: 0 20px;
+}
+
+.board-actions button:hover,
+.board-actions button:focus-visible {
+  background: var(--gold-bright);
+}
+
+.board-actions .secondary-button {
+  background: transparent;
+  border: 1px solid var(--edge);
+  color: var(--paper);
+}
+
+.board-actions .secondary-button:hover,
+.board-actions .secondary-button:focus-visible {
+  background: rgba(247, 239, 224, 0.08);
+}
+
 .hint {
   border-top: 1px solid rgba(247, 239, 224, 0.14);
   color: var(--muted);
@@ -296,6 +462,11 @@ h1 {
 
   .answer-row {
     flex-direction: column;
+  }
+
+  .booking-slots,
+  .booking-pool {
+    grid-template-columns: 1fr;
   }
 
   h1 {

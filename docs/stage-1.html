@@ -8,13 +8,8 @@
   </head>
   <body class="stage-page">
     <main class="stage-shell" aria-labelledby="stage-title">
-      <section class="stage-intro">
-        <p class="kicker">Stage One</p>
-        <h1 id="stage-title">The booking board is broken.</h1>
-        <p>
-          A message from the manager is waiting below. Watch carefully: the
-          briefing contains everything needed to repair the schedule.
-        </p>
+      <section class="stage-intro compact">
+        <h1 id="stage-title">Stage One - The Boss</h1>
       </section>
 
       <section class="video-panel" aria-label="Manager birthday briefing">
@@ -29,51 +24,257 @@
       </section>
 
       <section class="answer-panel" aria-labelledby="answer-title">
-        <h2 id="answer-title">Submit the repaired order</h2>
+        <h2 id="answer-title">Repair the booking board</h2>
         <p>
-          Enter the word revealed by the booking order.
+          Drag the loose bookings into the nine hourly slots, earliest to latest.
+          Drop a booking onto an occupied slot to swap it.
         </p>
-        <form class="answer-form" id="stage-one-form">
-          <label for="stage-one-answer">Answer</label>
-          <div class="answer-row">
-            <input id="stage-one-answer" name="answer" autocomplete="off" spellcheck="false">
-            <button type="submit">Check</button>
+
+        <section class="script-placeholder" aria-labelledby="script-placeholder-title">
+          <p class="kicker">Script clue placeholder</p>
+          <h3 id="script-placeholder-title">Temporary text for the video briefing</h3>
+          <p>
+            <strong>Placeholder:</strong> remove this block once the manager video
+            includes the puzzle details.
+          </p>
+          <div class="script-copy">
+            <p>Happy birthday, mate.</p>
+            <p>
+              Normally I would say something sincere here, but I cannot just
+              hand over birthday wishes for free. That would be unprofessional.
+            </p>
+            <p>
+              So here is the situation. The booking board has completely fallen
+              apart. Nine rooms, nine bookings, all on the hour, no gaps.
+              Earliest to latest.
+            </p>
+            <p>
+              The rooms are Prison Break, Zombie Lab, Bunker, Mastermind Heist,
+              Zodiac Killer, The Other Side, Wild West Saloon, Nikola Tesla's
+              Mystery, and The Chamber of Lost Legends.
+            </p>
+            <p>Here is what I know.</p>
+            <ol>
+              <li>The only booking after Zodiac Killer is The Chamber of Lost Legends.</li>
+              <li>Wild West Saloon has Mastermind Heist on one side and Zodiac Killer on the other, with no gaps.</li>
+              <li>The two rooms beginning with Z have exactly two bookings between them.</li>
+              <li>The Other Side is immediately before the earlier Z-room.</li>
+              <li>Nikola Tesla's Mystery has Prison Break on one side and The Other Side on the other, with no gaps.</li>
+              <li>Bunker is somewhere before Prison Break.</li>
+            </ol>
+            <p>
+              Put the bookings back in order. If you are actually as good at
+              this as everyone says, the next person waiting for you should be
+              obvious.
+            </p>
+            <p>Happy birthday. Do not mess up my schedule.</p>
           </div>
-        </form>
+        </section>
+
+        <div class="booking-board" id="booking-board">
+          <div class="booking-slots" aria-label="Booking order slots">
+            <div class="booking-slot" data-slot="0"><span>1</span></div>
+            <div class="booking-slot" data-slot="1"><span>2</span></div>
+            <div class="booking-slot" data-slot="2"><span>3</span></div>
+            <div class="booking-slot" data-slot="3"><span>4</span></div>
+            <div class="booking-slot" data-slot="4"><span>5</span></div>
+            <div class="booking-slot" data-slot="5"><span>6</span></div>
+            <div class="booking-slot" data-slot="6"><span>7</span></div>
+            <div class="booking-slot" data-slot="7"><span>8</span></div>
+            <div class="booking-slot" data-slot="8"><span>9</span></div>
+          </div>
+
+          <div class="booking-pool" id="booking-pool" aria-label="Loose bookings"></div>
+        </div>
+
+        <div class="board-actions">
+          <button type="button" id="check-board">Check order</button>
+          <button type="button" class="secondary-button" id="reset-board">Reset</button>
+        </div>
         <p class="answer-feedback" id="stage-one-feedback" aria-live="polite"></p>
 
         <details class="hint">
           <summary>Hint 1</summary>
-          <p>Place the bookings from earliest to latest before trying to read anything.</p>
+          <p>The first clue fixes the final two bookings.</p>
         </details>
         <details class="hint">
           <summary>Hint 2</summary>
-          <p>The room names matter after the order is fixed.</p>
+          <p>Wild West Saloon is trapped between Mastermind Heist and Zodiac Killer.</p>
         </details>
         <details class="hint">
           <summary>Hint 3</summary>
-          <p>Read the first letter of each room in chronological order.</p>
+          <p>Once you know where Zombie Lab goes, work backward through The Other Side and Nikola Tesla's Mystery.</p>
         </details>
       </section>
     </main>
 
     <script>
-      const form = document.querySelector("#stage-one-form");
-      const input = document.querySelector("#stage-one-answer");
+      const rooms = [
+        "Prison Break",
+        "Zombie Lab",
+        "Bunker",
+        "Mastermind Heist",
+        "Zodiac Killer",
+        "The Other Side",
+        "Wild West Saloon",
+        "Nikola Tesla's Mystery",
+        "The Chamber of Lost Legends",
+      ];
+      const solution = [
+        "Bunker",
+        "Prison Break",
+        "Nikola Tesla's Mystery",
+        "The Other Side",
+        "Zombie Lab",
+        "Mastermind Heist",
+        "Wild West Saloon",
+        "Zodiac Killer",
+        "The Chamber of Lost Legends",
+      ];
+      const pool = document.querySelector("#booking-pool");
+      const slots = [...document.querySelectorAll(".booking-slot")];
+      const checkButton = document.querySelector("#check-board");
+      const resetButton = document.querySelector("#reset-board");
       const feedback = document.querySelector("#stage-one-feedback");
+      let draggedCard = null;
+      let selectedCard = null;
 
-      form.addEventListener("submit", (event) => {
+      const makeCard = (room) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "booking-card";
+        card.draggable = true;
+        card.textContent = room;
+        card.dataset.room = room;
+
+        card.addEventListener("dragstart", (event) => {
+          draggedCard = card;
+          event.dataTransfer.setData("text/plain", room);
+          card.classList.add("dragging");
+        });
+
+        card.addEventListener("dragend", () => {
+          draggedCard = null;
+          card.classList.remove("dragging");
+        });
+
+        card.addEventListener("click", () => {
+          if (selectedCard === card) {
+            selectedCard.classList.remove("selected");
+            selectedCard = null;
+            return;
+          }
+
+          if (selectedCard) {
+            selectedCard.classList.remove("selected");
+          }
+
+          selectedCard = card;
+          selectedCard.classList.add("selected");
+        });
+
+        return card;
+      };
+
+      const placeCard = (card, target) => {
+        if (!card || !target) return;
+
+        const existingCard = target.querySelector(".booking-card");
+        const originalParent = card.parentElement;
+
+        if (existingCard && existingCard !== card) {
+          originalParent.appendChild(existingCard);
+        }
+
+        target.appendChild(card);
+        card.classList.remove("selected");
+        selectedCard = null;
+        feedback.textContent = "";
+        feedback.className = "answer-feedback";
+      };
+
+      const resetBoard = () => {
+        selectedCard = null;
+        pool.innerHTML = "";
+        slots.forEach((slot) => {
+          const label = slot.querySelector("span");
+          slot.innerHTML = "";
+          slot.appendChild(label);
+        });
+
+        rooms.forEach((room) => {
+          pool.appendChild(makeCard(room));
+        });
+
+        feedback.textContent = "";
+        feedback.className = "answer-feedback";
+      };
+
+      slots.forEach((slot) => {
+        slot.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          slot.classList.add("ready");
+        });
+
+        slot.addEventListener("dragleave", () => {
+          slot.classList.remove("ready");
+        });
+
+        slot.addEventListener("drop", (event) => {
+          event.preventDefault();
+          slot.classList.remove("ready");
+          placeCard(draggedCard, slot);
+        });
+
+        slot.addEventListener("click", () => {
+          placeCard(selectedCard, slot);
+        });
+      });
+
+      pool.addEventListener("dragover", (event) => {
         event.preventDefault();
-        const answer = input.value.trim().toUpperCase().replace(/[^A-Z]/g, "");
+      });
 
-        if (answer === "MOTHER") {
+      pool.addEventListener("drop", (event) => {
+        event.preventDefault();
+        if (draggedCard) {
+          pool.appendChild(draggedCard);
+          draggedCard = null;
+        }
+        feedback.textContent = "";
+        feedback.className = "answer-feedback";
+      });
+
+      pool.addEventListener("click", (event) => {
+        if (event.target === pool && selectedCard) {
+          pool.appendChild(selectedCard);
+          selectedCard.classList.remove("selected");
+          selectedCard = null;
+          feedback.textContent = "";
+          feedback.className = "answer-feedback";
+        }
+      });
+
+      checkButton.addEventListener("click", () => {
+        const attempt = slots.map((slot) => slot.querySelector(".booking-card")?.dataset.room ?? "");
+        const isComplete = attempt.every(Boolean);
+        const isCorrect = attempt.every((room, index) => room === solution[index]);
+
+        if (isCorrect) {
           feedback.innerHTML = "Correct. The next message belongs to her. <a href=\"stage-2.html\">Continue to Stage Two</a>.";
           feedback.className = "answer-feedback success";
+        } else if (!isComplete) {
+          feedback.textContent = "Not yet. Every hourly slot needs a booking.";
+          feedback.className = "answer-feedback error";
         } else {
           feedback.textContent = "Not yet. The bookings are still out of order.";
           feedback.className = "answer-feedback error";
         }
       });
+
+      resetButton.addEventListener("click", resetBoard);
+
+      resetBoard();
     </script>
   </body>
 </html>
