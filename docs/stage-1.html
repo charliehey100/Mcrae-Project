@@ -7,13 +7,73 @@
     <link rel="stylesheet" href="assets/css/site-v2.css">
   </head>
   <body class="stage-page">
-    <main class="placeholder" aria-labelledby="stage-title">
-      <p class="kicker">Stage One</p>
-      <h1 id="stage-title">Coming soon.</h1>
-      <p>
-        The first puzzle will appear here once the challenge has been designed.
-      </p>
-      <a class="secondary-link" href="index.html">Return to the entrance</a>
+    <main class="stage-shell" aria-labelledby="stage-title">
+      <section class="stage-intro">
+        <p class="kicker">Stage One</p>
+        <h1 id="stage-title">The booking board is broken.</h1>
+        <p>
+          A message from the manager is waiting below. Watch carefully: the
+          briefing contains everything needed to repair the schedule.
+        </p>
+      </section>
+
+      <section class="video-panel" aria-label="Manager birthday briefing">
+        <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
+          <source src="assets/videos/manager-message.mp4" type="video/mp4">
+          Your browser does not support embedded video.
+        </video>
+        <p class="video-note">
+          Placeholder video slot: replace
+          <code>assets/videos/manager-message.mp4</code> once the recording is ready.
+        </p>
+      </section>
+
+      <section class="answer-panel" aria-labelledby="answer-title">
+        <h2 id="answer-title">Submit the repaired order</h2>
+        <p>
+          Enter the word revealed by the booking order.
+        </p>
+        <form class="answer-form" id="stage-one-form">
+          <label for="stage-one-answer">Answer</label>
+          <div class="answer-row">
+            <input id="stage-one-answer" name="answer" autocomplete="off" spellcheck="false">
+            <button type="submit">Check</button>
+          </div>
+        </form>
+        <p class="answer-feedback" id="stage-one-feedback" aria-live="polite"></p>
+
+        <details class="hint">
+          <summary>Hint 1</summary>
+          <p>Place the bookings from earliest to latest before trying to read anything.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 2</summary>
+          <p>The room names matter after the order is fixed.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 3</summary>
+          <p>Read the first letter of each room in chronological order.</p>
+        </details>
+      </section>
     </main>
+
+    <script>
+      const form = document.querySelector("#stage-one-form");
+      const input = document.querySelector("#stage-one-answer");
+      const feedback = document.querySelector("#stage-one-feedback");
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const answer = input.value.trim().toUpperCase().replace(/[^A-Z]/g, "");
+
+        if (answer === "MOTHER") {
+          feedback.innerHTML = "Correct. The next message belongs to her. <a href=\"stage-2.html\">Continue to Stage Two</a>.";
+          feedback.className = "answer-feedback success";
+        } else {
+          feedback.textContent = "Not yet. The bookings are still out of order.";
+          feedback.className = "answer-feedback error";
+        }
+      });
+    </script>
   </body>
 </html>
