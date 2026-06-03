@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="assets/css/site-v2.css">
   </head>
   <body class="stage-page">
+    <nav class="dev-stage-nav" aria-label="Development stage selector">
+      <span>Dev</span>
+      <a href="index.html">Home</a>
+      <a href="stage-1.html">1</a>
+      <a href="stage-2.html">2</a>
+      <a href="stage-3.html">3</a>
+      <a href="stage-4.html">4</a>
+      <a href="stage-5.html">5</a>
+    </nav>
+
     <main class="stage-shell" aria-labelledby="stage-title">
       <section class="stage-intro compact">
         <h1 id="stage-title">Stage One - The Boss</h1>
@@ -23,51 +33,33 @@
         </p>
       </section>
 
-      <section class="answer-panel" aria-labelledby="answer-title">
-        <h2 id="answer-title">Repair the booking board</h2>
-        <p>
-          Drag the loose bookings into the nine hourly slots, earliest to latest.
-          Drop a booking onto an occupied slot to swap it.
-        </p>
-
-        <section class="script-placeholder" aria-labelledby="script-placeholder-title">
-          <p class="kicker">Script clue placeholder</p>
-          <h3 id="script-placeholder-title">Temporary text for the video briefing</h3>
-          <p>
-            <strong>Placeholder:</strong> remove this block once the manager video
-            includes the puzzle details.
-          </p>
-          <div class="script-copy">
-            <p>Happy birthday, mate.</p>
+      <section class="answer-panel" aria-label="Stage one puzzle">
+        <section class="email-card" aria-label="Unread email">
+          <div class="email-toolbar">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="email-meta">
+            <p class="email-from">From: Operations Desk</p>
+            <p class="email-subject">Subject: final room order still broken</p>
+            <p class="email-time">Sent: 11:58 PM</p>
+          </div>
+          <div class="email-body">
+            <p>Leaving this here before the birthday lock goes live.</p>
             <p>
-              Normally I would say something sincere here, but I cannot just
-              hand over birthday wishes for free. That would be unprofessional.
+              The room list has torn itself off the board again. Nine rooms,
+              nine hourly spaces, no missing bookings. The order matters.
             </p>
-            <p>
-              So here is the situation. The booking board has completely fallen
-              apart. Nine rooms, nine bookings, all on the hour, no gaps.
-              Earliest to latest.
-            </p>
-            <p>
-              The rooms are Prison Break, Zombie Lab, Bunker, Mastermind Heist,
-              Zodiac Killer, The Other Side, Wild West Saloon, Nikola Tesla's
-              Mystery, and The Chamber of Lost Legends.
-            </p>
-            <p>Here is what I know.</p>
-            <ol>
-              <li>The only booking after Zodiac Killer is The Chamber of Lost Legends.</li>
-              <li>Wild West Saloon has Mastermind Heist on one side and Zodiac Killer on the other, with no gaps.</li>
-              <li>The two rooms beginning with Z have exactly two bookings between them.</li>
-              <li>The Other Side is immediately before the earlier Z-room.</li>
-              <li>Nikola Tesla's Mystery has Prison Break on one side and The Other Side on the other, with no gaps.</li>
+            <ul>
+              <li>The only room after Zodiac Killer is The Chamber of Lost Legends.</li>
+              <li>Wild West Saloon is caught between Mastermind Heist and Zodiac Killer.</li>
+              <li>The two Z rooms have exactly two bookings between them.</li>
+              <li>The Other Side is immediately before the earlier Z room.</li>
+              <li>Nikola Tesla's Mystery touches both Prison Break and The Other Side.</li>
               <li>Bunker is somewhere before Prison Break.</li>
-            </ol>
-            <p>
-              Put the bookings back in order. If you are actually as good at
-              this as everyone says, the next person waiting for you should be
-              obvious.
-            </p>
-            <p>Happy birthday. Do not mess up my schedule.</p>
+            </ul>
+            <p>Do not forward this. He likes this sort of thing far too much.</p>
           </div>
         </section>
 
@@ -261,7 +253,7 @@
         const isCorrect = attempt.every((room, index) => room === solution[index]);
 
         if (isCorrect) {
-          feedback.innerHTML = "Correct. The next message belongs to her. <a href=\"stage-2.html\">Continue to Stage Two</a>.";
+          feedback.innerHTML = "Correct. The next message belongs to Oscar. <a href=\"stage-2.html\">Continue to Stage Two</a>.";
           feedback.className = "answer-feedback success";
         } else if (!isComplete) {
           feedback.textContent = "Not yet. Every hourly slot needs a booking.";

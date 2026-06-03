@@ -7,13 +7,176 @@
     <link rel="stylesheet" href="assets/css/site-v2.css">
   </head>
   <body class="stage-page">
-    <main class="placeholder" aria-labelledby="stage-title">
-      <p class="kicker">Stage Two</p>
-      <h1 id="stage-title">Coming soon.</h1>
-      <p>
-        The next birthday message will appear here once the second puzzle is ready.
-      </p>
-      <a class="secondary-link" href="index.html">Return to the entrance</a>
+    <nav class="dev-stage-nav" aria-label="Development stage selector">
+      <span>Dev</span>
+      <a href="index.html">Home</a>
+      <a href="stage-1.html">1</a>
+      <a href="stage-2.html">2</a>
+      <a href="stage-3.html">3</a>
+      <a href="stage-4.html">4</a>
+      <a href="stage-5.html">5</a>
+    </nav>
+
+    <main class="stage-shell" aria-labelledby="stage-title">
+      <section class="stage-intro compact">
+        <h1 id="stage-title">Stage Two - Oscar</h1>
+      </section>
+
+      <section class="video-panel" aria-label="Oscar birthday message">
+        <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
+          <source src="assets/videos/oscar-message.mp4" type="video/mp4">
+          Your browser does not support embedded video.
+        </video>
+        <p class="video-note">
+          Placeholder video slot: replace
+          <code>assets/videos/oscar-message.mp4</code> once the recording is ready.
+        </p>
+      </section>
+
+      <section class="answer-panel" aria-label="Stage two puzzle">
+        <div class="movement-layout">
+          <div class="movement-grid" id="movement-grid" aria-label="Movement grid"></div>
+          <div class="movement-status">
+            <p class="kicker">Steps</p>
+            <strong id="step-count">0 / 18</strong>
+            <p id="movement-feedback" class="answer-feedback" aria-live="polite"></p>
+            <div class="arrow-pad" aria-label="Arrow key fallback controls">
+              <button type="button" data-direction="up" aria-label="Move up">↑</button>
+              <button type="button" data-direction="left" aria-label="Move left">←</button>
+              <button type="button" data-direction="down" aria-label="Move down">↓</button>
+              <button type="button" data-direction="right" aria-label="Move right">→</button>
+            </div>
+          </div>
+        </div>
+
+        <details class="hint">
+          <summary>Hint 1</summary>
+          <p>The video gives directions. Watch his eyes, not his mouth.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 2</summary>
+          <p>Write down every direction before touching the grid.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 3</summary>
+          <p>The full path is 18 moves long.</p>
+        </details>
+      </section>
     </main>
+
+    <script>
+      const size = 7;
+      const start = { x: 3, y: 3 };
+      const solution = [
+        "up",
+        "up",
+        "right",
+        "down",
+        "right",
+        "right",
+        "up",
+        "left",
+        "up",
+        "left",
+        "down",
+        "down",
+        "right",
+        "down",
+        "left",
+        "left",
+        "up",
+        "right",
+      ];
+      const deltas = {
+        up: { x: 0, y: -1 },
+        down: { x: 0, y: 1 },
+        left: { x: -1, y: 0 },
+        right: { x: 1, y: 0 },
+      };
+      const grid = document.querySelector("#movement-grid");
+      const count = document.querySelector("#step-count");
+      const feedback = document.querySelector("#movement-feedback");
+      let position = { ...start };
+      let step = 0;
+
+      const render = () => {
+        grid.innerHTML = "";
+        for (let y = 0; y < size; y += 1) {
+          for (let x = 0; x < size; x += 1) {
+            const tile = document.createElement("div");
+            tile.className = "movement-tile";
+            if (x === start.x && y === start.y && step > 0) {
+              tile.classList.add("start");
+            }
+            if (x === position.x && y === position.y) {
+              tile.classList.add("current");
+            }
+            grid.appendChild(tile);
+          }
+        }
+        count.textContent = `${step} / ${solution.length}`;
+      };
+
+      const resetPath = (message) => {
+        position = { ...start };
+        step = 0;
+        feedback.textContent = message;
+        feedback.className = "answer-feedback error";
+        grid.classList.add("shake");
+        setTimeout(() => grid.classList.remove("shake"), 240);
+        render();
+      };
+
+      const move = (direction) => {
+        if (!solution[step]) return;
+
+        if (direction !== solution[step]) {
+          resetPath("Wrong way. Back to the start.");
+          return;
+        }
+
+        const next = {
+          x: position.x + deltas[direction].x,
+          y: position.y + deltas[direction].y,
+        };
+
+        if (next.x < 0 || next.x >= size || next.y < 0 || next.y >= size) {
+          resetPath("That path leaves the grid. Back to the start.");
+          return;
+        }
+
+        position = next;
+        step += 1;
+        feedback.textContent = "";
+        feedback.className = "answer-feedback";
+
+        if (step === solution.length) {
+          feedback.innerHTML = "Path complete. <a href=\"stage-3.html\">Continue to Stage Three</a>.";
+          feedback.className = "answer-feedback success";
+        }
+
+        render();
+      };
+
+      document.addEventListener("keydown", (event) => {
+        const keyMap = {
+          ArrowUp: "up",
+          ArrowDown: "down",
+          ArrowLeft: "left",
+          ArrowRight: "right",
+        };
+        const direction = keyMap[event.key];
+        if (direction) {
+          event.preventDefault();
+          move(direction);
+        }
+      });
+
+      document.querySelectorAll("[data-direction]").forEach((button) => {
+        button.addEventListener("click", () => move(button.dataset.direction));
+      });
+
+      render();
+    </script>
   </body>
 </html>

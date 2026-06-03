@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stage Three | McRae Project</title>
+    <link rel="stylesheet" href="assets/css/site-v2.css">
+  </head>
+  <body class="stage-page">
+    <nav class="dev-stage-nav" aria-label="Development stage selector">
+      <span>Dev</span>
+      <a href="index.html">Home</a>
+      <a href="stage-1.html">1</a>
+      <a href="stage-2.html">2</a>
+      <a href="stage-3.html">3</a>
+      <a href="stage-4.html">4</a>
+      <a href="stage-5.html">5</a>
+    </nav>
+
+    <main class="stage-shell" aria-labelledby="stage-title">
+      <section class="stage-intro compact">
+        <h1 id="stage-title">Stage Three - Seb</h1>
+      </section>
+
+      <section class="video-panel" aria-label="Seb birthday message">
+        <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
+          <source src="assets/videos/seb-message.mp4" type="video/mp4">
+          Your browser does not support embedded video.
+        </video>
+        <p class="video-note">
+          Placeholder video slot: replace
+          <code>assets/videos/seb-message.mp4</code> once the recording is ready.
+        </p>
+      </section>
+
+      <section class="answer-panel" aria-label="Stage three puzzle">
+        <form class="answer-form" id="morse-form">
+          <label for="morse-answer">Answer</label>
+          <div class="answer-row">
+            <input id="morse-answer" name="answer" type="text" autocomplete="off">
+            <button type="submit">Unlock</button>
+          </div>
+        </form>
+        <p class="answer-feedback" id="morse-feedback" aria-live="polite"></p>
+
+        <details class="hint">
+          <summary>Hint 1</summary>
+          <p>Short strums are dots. Long strums are dashes.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 2</summary>
+          <p>The message is nine letters long.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 3</summary>
+          <p>No space is needed.</p>
+        </details>
+      </section>
+    </main>
+
+    <script>
+      const form = document.querySelector("#morse-form");
+      const input = document.querySelector("#morse-answer");
+      const feedback = document.querySelector("#morse-feedback");
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const answer = input.value.trim().toLowerCase();
+
+        if (answer === "sixstring" || answer === "6" || answer === "six") {
+          feedback.innerHTML = "Correct. <a href=\"stage-4.html\">Continue to Stage Four</a>.";
+          feedback.className = "answer-feedback success";
+        } else {
+          feedback.textContent = "Not quite.";
+          feedback.className = "answer-feedback error";
+        }
+      });
+    </script>
+  </body>
+</html>

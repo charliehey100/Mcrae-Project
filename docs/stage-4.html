@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stage Four | McRae Project</title>
+    <link rel="stylesheet" href="assets/css/site-v2.css">
+  </head>
+  <body class="stage-page">
+    <nav class="dev-stage-nav" aria-label="Development stage selector">
+      <span>Dev</span>
+      <a href="index.html">Home</a>
+      <a href="stage-1.html">1</a>
+      <a href="stage-2.html">2</a>
+      <a href="stage-3.html">3</a>
+      <a href="stage-4.html">4</a>
+      <a href="stage-5.html">5</a>
+    </nav>
+
+    <main class="stage-shell" aria-labelledby="stage-title">
+      <section class="stage-intro compact">
+        <h1 id="stage-title">Stage Four - Charlie</h1>
+      </section>
+
+      <section class="video-panel" aria-label="Charlie birthday message">
+        <div class="video-frame">
+          <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
+            <source src="assets/videos/charlie-message.mp4" type="video/mp4">
+            Your browser does not support embedded video.
+          </video>
+          <a
+            class="fake-download"
+            href="downloads/clue-packet-placeholder.txt"
+            download="birthday_final_FINAL_v3_PLACEHOLDER.txt"
+            aria-label="Download suspicious birthday file"
+          >
+            Download
+          </a>
+        </div>
+        <p class="video-note">
+          Placeholder video slot: replace
+          <code>assets/videos/charlie-message.mp4</code> once the recording is ready.
+          The overlay button currently downloads a local placeholder clue file.
+        </p>
+      </section>
+
+      <section class="answer-panel" aria-label="Stage four puzzle">
+        <form class="answer-form" id="arg-form">
+          <label for="arg-answer">Keyword</label>
+          <div class="answer-row">
+            <input id="arg-answer" name="answer" type="text" autocomplete="off">
+            <button type="submit">Unlock</button>
+          </div>
+        </form>
+        <p class="answer-feedback" id="arg-feedback" aria-live="polite"></p>
+
+        <details class="hint">
+          <summary>Hint 1</summary>
+          <p>Something on top of the video does not belong to the video.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 2</summary>
+          <p>The downloaded file is only the first breadcrumb.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 3</summary>
+          <p>For now, the development keyword is placeholder.</p>
+        </details>
+      </section>
+    </main>
+
+    <script>
+      const form = document.querySelector("#arg-form");
+      const input = document.querySelector("#arg-answer");
+      const feedback = document.querySelector("#arg-feedback");
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const answer = input.value.trim().toLowerCase();
+
+        if (answer === "placeholder") {
+          feedback.innerHTML = "Correct. ARG endpoint placeholder reached. <a href=\"stage-5.html\">Continue to Stage Five</a>.";
+          feedback.className = "answer-feedback success";
+        } else {
+          feedback.textContent = "Not yet.";
+          feedback.className = "answer-feedback error";
+        }
+      });
+    </script>
+  </body>
+</html>

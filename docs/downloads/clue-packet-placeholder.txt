@@ -1,0 +1,11 @@
+PLACEHOLDER ARG CLUE PACKET
+
+This file is standing in for the first real off-site breadcrumb.
+
+Planned structure:
+1. The downloaded filename hides the first instruction.
+2. The first instruction points to a Google Drive file or folder.
+3. The Drive folder contains the next cipher clue.
+4. The final file reveals the keyword to enter back on Stage Four.
+
+Development keyword: placeholder

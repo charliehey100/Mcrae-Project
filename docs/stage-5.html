@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stage Five | McRae Project</title>
+    <link rel="stylesheet" href="assets/css/site-v2.css">
+  </head>
+  <body class="stage-page">
+    <nav class="dev-stage-nav" aria-label="Development stage selector">
+      <span>Dev</span>
+      <a href="index.html">Home</a>
+      <a href="stage-1.html">1</a>
+      <a href="stage-2.html">2</a>
+      <a href="stage-3.html">3</a>
+      <a href="stage-4.html">4</a>
+      <a href="stage-5.html">5</a>
+    </nav>
+
+    <main class="stage-shell" aria-labelledby="stage-title">
+      <section class="stage-intro compact">
+        <h1 id="stage-title">Stage Five - Mum</h1>
+      </section>
+
+      <section class="video-panel" aria-label="Mum birthday message">
+        <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
+          <source src="assets/videos/mum-message.mp4" type="video/mp4">
+          Your browser does not support embedded video.
+        </video>
+        <p class="video-note">
+          Placeholder video slot: replace
+          <code>assets/videos/mum-message.mp4</code> once the recording is ready.
+        </p>
+      </section>
+
+      <section class="answer-panel" aria-label="Stage five puzzle">
+        <article class="transcript-card" aria-label="Transcript">
+          <div class="transcript-paper" id="transcript"></div>
+        </article>
+
+        <div class="word-lock" aria-live="polite">
+          <span id="marked-code">------</span>
+          <button type="button" id="clear-transcript">Clear</button>
+        </div>
+        <p class="answer-feedback" id="mum-feedback" aria-live="polite"></p>
+
+        <details class="hint">
+          <summary>Hint 1</summary>
+          <p>Some memories sound warmer than they are accurate.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 2</summary>
+          <p>Mark the details that do not belong.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 3</summary>
+          <p>Read the first letters in the order they appear.</p>
+        </details>
+      </section>
+    </main>
+
+    <script>
+      const transcript = [
+        "Happy birthday, love.",
+        "I tried to write down a few sensible memories, but they came out all jumbled.",
+        "There you were in the backyard, skydiving with your dog Harold while Xavier Dunning announced the rules.",
+        "I was sure it was your August birthday, right up until the ostrich arrived and you explained, very seriously, that you had become a wizard.",
+        "I may have one or two details wrong, but the important part is true: you were loved then, and you are loved now.",
+        "Happy birthday.",
+      ];
+      const solution = "shadow";
+      const selected = new Set();
+      const transcriptElement = document.querySelector("#transcript");
+      const codeElement = document.querySelector("#marked-code");
+      const feedback = document.querySelector("#mum-feedback");
+      const clearButton = document.querySelector("#clear-transcript");
+
+      const wordPattern = /[A-Za-z]+(?:'[A-Za-z]+)?|[^A-Za-z]+/g;
+      const renderTranscript = () => {
+        transcriptElement.innerHTML = "";
+
+        transcript.forEach((paragraph, paragraphIndex) => {
+          const p = document.createElement("p");
+          const parts = paragraph.match(wordPattern) || [];
+          let wordIndex = 0;
+
+          parts.forEach((part) => {
+            if (/^[A-Za-z]/.test(part)) {
+              const button = document.createElement("button");
+              const id = `${paragraphIndex}-${wordIndex}`;
+              button.type = "button";
+              button.className = "transcript-word";
+              button.textContent = part;
+              button.dataset.word = part;
+              button.dataset.wordId = id;
+              button.setAttribute("aria-pressed", selected.has(id) ? "true" : "false");
+              if (selected.has(id)) {
+                button.classList.add("selected");
+              }
+              button.addEventListener("click", () => toggleWord(id));
+              p.appendChild(button);
+              wordIndex += 1;
+            } else {
+              p.append(part);
+            }
+          });
+
+          transcriptElement.appendChild(p);
+        });
+      };
+
+      const getMarkedCode = () => {
+        return [...document.querySelectorAll(".transcript-word.selected")]
+          .map((word) => word.dataset.word[0].toLowerCase())
+          .join("");
+      };
+
+      const updateCode = () => {
+        const code = getMarkedCode();
+        codeElement.textContent = code.padEnd(solution.length, "-").slice(0, Math.max(solution.length, code.length)).toUpperCase();
+
+        if (code === solution) {
+          feedback.textContent = "Correct.";
+          feedback.className = "answer-feedback success";
+        } else if (code.length >= solution.length) {
+          feedback.textContent = "Not quite.";
+          feedback.className = "answer-feedback error";
+        } else {
+          feedback.textContent = "";
+          feedback.className = "answer-feedback";
+        }
+      };
+
+      const toggleWord = (id) => {
+        if (selected.has(id)) {
+          selected.delete(id);
+        } else {
+          selected.add(id);
+        }
+
+        renderTranscript();
+        updateCode();
+      };
+
+      clearButton.addEventListener("click", () => {
+        selected.clear();
+        renderTranscript();
+        updateCode();
+      });
+
+      renderTranscript();
+      updateCode();
+    </script>
+  </body>
+</html>
