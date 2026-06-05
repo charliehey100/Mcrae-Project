@@ -1,11 +1,13 @@
-PLACEHOLDER ARG CLUE PACKET
+LEGACY DEVELOPMENT NOTE
 
-This file is standing in for the first real off-site breadcrumb.
+Stage Six no longer starts from this text download.
 
-Planned structure:
-1. The downloaded filename hides the first instruction.
-2. The first instruction points to a Google Drive file or folder.
-3. The Drive folder contains the next cipher clue.
-4. The final file reveals the keyword to enter back on Stage Four.
+The final ARG structure should download the actual birthday video from the
+Stage Six overlay icon. The downloaded video filename should include the
+Google Drive folder ID, for example:
 
-Development keyword: placeholder
+birthday_message__drive-folder-PASTE_FOLDER_ID_HERE.mp4
+
+Replace PASTE_FOLDER_ID_HERE in docs/stage-6.html once the Drive folder exists.
+
+Final keyword: OOZWLAR

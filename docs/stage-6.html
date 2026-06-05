@@ -31,21 +31,30 @@
           </video>
           <a
             class="fake-download"
-            href="downloads/clue-packet-placeholder.txt"
-            download="birthday_final_FINAL_v3_PLACEHOLDER.txt"
+            href="assets/videos/charlie-message.mp4"
+            download="birthday_message__drive-folder-PASTE_FOLDER_ID_HERE.mp4"
             aria-label="Download suspicious birthday file"
+            title="Download suspicious file"
           >
-            Download
+            <span aria-hidden="true"></span>
           </a>
         </div>
         <p class="video-note">
           Placeholder video slot: replace
           <code>assets/videos/charlie-message.mp4</code> once the recording is ready.
-          The overlay button currently downloads a local placeholder clue file.
+          The small download icon saves the same video with the first clue in its filename.
         </p>
       </section>
 
       <section class="answer-panel" aria-label="Stage six puzzle">
+        <div class="arg-brief">
+          <p class="kicker">ARG trail</p>
+          <p>
+            Follow the downloaded clue outward, collect the final keyword, then
+            return here to unlock the ending.
+          </p>
+        </div>
+
         <form class="answer-form" id="arg-form">
           <label for="arg-answer">Keyword</label>
           <div class="answer-row">
@@ -56,16 +65,36 @@
         <p class="answer-feedback" id="arg-feedback" aria-live="polite"></p>
 
         <details class="hint">
-          <summary>Hint 1</summary>
-          <p>Something on top of the video does not belong to the video.</p>
+          <summary>Hint 1 - Download file</summary>
+          <p>
+            The icon on the video downloads the birthday video. The file's
+            name matters as much as the file itself.
+          </p>
         </details>
         <details class="hint">
-          <summary>Hint 2</summary>
-          <p>The downloaded file is only the first breadcrumb.</p>
+          <summary>Hint 2 - Drive folder</summary>
+          <p>
+            A Drive folder ID belongs after <code>drive/folders/</code>. Open
+            the readable file first, then use the riddle answer as a filename.
+            <a href="https://drive.google.com/" target="_blank" rel="noreferrer">Open Google Drive</a>.
+          </p>
         </details>
         <details class="hint">
-          <summary>Hint 3</summary>
-          <p>For now, the development keyword is placeholder.</p>
+          <summary>Hint 3 - Jumbled files</summary>
+          <p>
+            Most files in the folder are noise. If the riddle gives you the
+            right file, read that word the right way around. A
+            <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noreferrer">CyberChef</a>
+            reverse operation can help.
+          </p>
+        </details>
+        <details class="hint">
+          <summary>Hint 4 - Original video</summary>
+          <p>
+            If the next word is SPECTROGRAM, inspect the downloaded birthday
+            video with a
+            <a href="https://academo.org/demos/spectrum-analyzer/" target="_blank" rel="noreferrer">spectrogram viewer</a>.
+          </p>
         </details>
       </section>
     </main>
@@ -79,8 +108,8 @@
         event.preventDefault();
         const answer = input.value.trim().toLowerCase();
 
-        if (answer === "placeholder") {
-          feedback.textContent = "Correct. ARG endpoint placeholder reached.";
+        if (answer === "oozwlar") {
+          feedback.textContent = "Correct. ARG endpoint reached.";
           feedback.className = "answer-feedback success";
         } else {
           feedback.textContent = "Not yet.";

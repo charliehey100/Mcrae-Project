@@ -113,25 +113,59 @@ body::after {
 
 .fake-download {
   align-items: center;
-  background: rgba(247, 239, 224, 0.92);
-  border: 1px solid rgba(13, 17, 24, 0.32);
-  border-radius: 6px;
-  color: #14100a;
+  background: rgba(7, 9, 13, 0.72);
+  border: 1px solid rgba(247, 239, 224, 0.42);
+  border-radius: 999px;
+  color: var(--paper);
   display: inline-flex;
-  font-size: 0.84rem;
-  font-weight: 900;
-  min-height: 40px;
-  padding: 0 14px;
+  height: 46px;
+  justify-content: center;
   position: absolute;
   right: 14px;
   text-decoration: none;
   top: 14px;
+  width: 46px;
   z-index: 2;
 }
 
 .fake-download:hover,
 .fake-download:focus-visible {
-  background: var(--gold-bright);
+  background: rgba(240, 199, 118, 0.92);
+  border-color: var(--gold-bright);
+  color: #14100a;
+  outline: none;
+}
+
+.fake-download span {
+  border: 2px solid currentColor;
+  border-top: 0;
+  display: block;
+  height: 22px;
+  position: relative;
+  width: 23px;
+}
+
+.fake-download span::before {
+  background: currentColor;
+  content: "";
+  height: 16px;
+  left: 50%;
+  position: absolute;
+  top: -9px;
+  transform: translateX(-50%);
+  width: 3px;
+}
+
+.fake-download span::after {
+  border: solid currentColor;
+  border-width: 0 3px 3px 0;
+  content: "";
+  height: 9px;
+  left: 50%;
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%) rotate(45deg);
+  width: 9px;
 }
 
 .video-note {
@@ -222,6 +256,21 @@ code {
 .answer-feedback a {
   color: var(--gold-bright);
   font-weight: 800;
+}
+
+.arg-brief {
+  background: rgba(247, 239, 224, 0.055);
+  border: 1px solid rgba(247, 239, 224, 0.14);
+  border-radius: 8px;
+  padding: clamp(16px, 3vw, 22px);
+}
+
+.arg-brief p {
+  margin: 0;
+}
+
+.arg-brief .kicker {
+  margin-bottom: 8px;
 }
 
 .script-placeholder {
@@ -798,6 +847,11 @@ code {
 
 .hint p {
   margin-bottom: 0;
+}
+
+.hint a {
+  color: var(--gold-bright);
+  font-weight: 800;
 }
 
 .dev-stage-nav {
