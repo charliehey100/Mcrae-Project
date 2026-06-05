@@ -15,6 +15,7 @@
       <a href="stage-3.html">3</a>
       <a href="stage-4.html">4</a>
       <a href="stage-5.html">5</a>
+      <a href="stage-6.html">6</a>
     </nav>
 
     <main class="stage-shell" aria-labelledby="stage-title">
@@ -37,14 +38,14 @@
         <div class="movement-layout">
           <div class="movement-grid" id="movement-grid" aria-label="Movement grid"></div>
           <div class="movement-status">
-            <p class="kicker">Steps</p>
-            <strong id="step-count">0 / 18</strong>
+            <p class="kicker">Trace</p>
+            <strong id="step-count">--------</strong>
             <p id="movement-feedback" class="answer-feedback" aria-live="polite"></p>
             <div class="arrow-pad" aria-label="Arrow key fallback controls">
-              <button type="button" data-direction="up" aria-label="Move up">↑</button>
-              <button type="button" data-direction="left" aria-label="Move left">←</button>
-              <button type="button" data-direction="down" aria-label="Move down">↓</button>
-              <button type="button" data-direction="right" aria-label="Move right">→</button>
+              <button type="button" data-direction="up" aria-label="Move up">U</button>
+              <button type="button" data-direction="left" aria-label="Move left">L</button>
+              <button type="button" data-direction="down" aria-label="Move down">D</button>
+              <button type="button" data-direction="right" aria-label="Move right">R</button>
             </div>
           </div>
         </div>
@@ -55,11 +56,11 @@
         </details>
         <details class="hint">
           <summary>Hint 2</summary>
-          <p>Write down every direction before touching the grid.</p>
+          <p>The trace only remembers the most recent eight moves.</p>
         </details>
         <details class="hint">
           <summary>Hint 3</summary>
-          <p>The full path is 18 moves long.</p>
+          <p>There is no meaningful start or finish square.</p>
         </details>
       </section>
     </main>
@@ -69,24 +70,20 @@
       const start = { x: 3, y: 3 };
       const solution = [
         "up",
-        "up",
         "right",
-        "down",
-        "right",
-        "right",
-        "up",
         "left",
         "up",
-        "left",
-        "down",
         "down",
         "right",
         "down",
         "left",
-        "left",
-        "up",
-        "right",
       ];
+      const symbols = {
+        up: "U",
+        down: "D",
+        left: "L",
+        right: "R",
+      };
       const deltas = {
         up: { x: 0, y: -1 },
         down: { x: 0, y: 1 },
@@ -97,7 +94,8 @@
       const count = document.querySelector("#step-count");
       const feedback = document.querySelector("#movement-feedback");
       let position = { ...start };
-      let step = 0;
+      let trace = [];
+      let unlocked = false;
 
       const render = () => {
         grid.innerHTML = "";
@@ -105,53 +103,34 @@
           for (let x = 0; x < size; x += 1) {
             const tile = document.createElement("div");
             tile.className = "movement-tile";
-            if (x === start.x && y === start.y && step > 0) {
-              tile.classList.add("start");
-            }
             if (x === position.x && y === position.y) {
               tile.classList.add("current");
             }
             grid.appendChild(tile);
           }
         }
-        count.textContent = `${step} / ${solution.length}`;
-      };
-
-      const resetPath = (message) => {
-        position = { ...start };
-        step = 0;
-        feedback.textContent = message;
-        feedback.className = "answer-feedback error";
-        grid.classList.add("shake");
-        setTimeout(() => grid.classList.remove("shake"), 240);
-        render();
+        count.textContent = trace.map((direction) => symbols[direction]).join("").padStart(solution.length, "-");
       };
 
       const move = (direction) => {
-        if (!solution[step]) return;
+        if (unlocked) return;
 
-        if (direction !== solution[step]) {
-          resetPath("Wrong way. Back to the start.");
-          return;
-        }
-
-        const next = {
-          x: position.x + deltas[direction].x,
-          y: position.y + deltas[direction].y,
+        position = {
+          x: (position.x + deltas[direction].x + size) % size,
+          y: (position.y + deltas[direction].y + size) % size,
         };
 
-        if (next.x < 0 || next.x >= size || next.y < 0 || next.y >= size) {
-          resetPath("That path leaves the grid. Back to the start.");
-          return;
+        trace.push(direction);
+        if (trace.length > solution.length) {
+          trace = trace.slice(trace.length - solution.length);
         }
 
-        position = next;
-        step += 1;
         feedback.textContent = "";
         feedback.className = "answer-feedback";
 
-        if (step === solution.length) {
-          feedback.innerHTML = "Path complete. <a href=\"stage-3.html\">Continue to Stage Three</a>.";
+        if (trace.join("|") === solution.join("|")) {
+          unlocked = true;
+          feedback.innerHTML = "Correct. <a href=\"stage-3.html\">Continue to Stage Three</a>.";
           feedback.className = "answer-feedback success";
         }
 

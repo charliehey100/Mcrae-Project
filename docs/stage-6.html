@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stage Six | McRae Project</title>
+    <link rel="stylesheet" href="assets/css/site-v2.css">
+  </head>
+  <body class="stage-page">
+    <nav class="dev-stage-nav" aria-label="Development stage selector">
+      <span>Dev</span>
+      <a href="index.html">Home</a>
+      <a href="stage-1.html">1</a>
+      <a href="stage-2.html">2</a>
+      <a href="stage-3.html">3</a>
+      <a href="stage-4.html">4</a>
+      <a href="stage-5.html">5</a>
+      <a href="stage-6.html">6</a>
+    </nav>
+
+    <main class="stage-shell" aria-labelledby="stage-title">
+      <section class="stage-intro compact">
+        <h1 id="stage-title">Stage Six - Anna</h1>
+      </section>
+
+      <section class="video-panel" aria-label="Anna birthday message">
+        <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
+          <source src="assets/videos/anna-message.mp4" type="video/mp4">
+          Your browser does not support embedded video.
+        </video>
+        <p class="video-note">
+          Placeholder video slot: replace
+          <code>assets/videos/anna-message.mp4</code> once the recording is ready.
+        </p>
+      </section>
+
+      <section class="answer-panel" aria-label="Stage six puzzle">
+        <div class="bookcase" id="bookcase" aria-label="Book shelf"></div>
+
+        <div class="word-lock" aria-live="polite">
+          <span id="book-code">-----</span>
+          <button type="button" id="clear-books">Clear</button>
+        </div>
+        <p class="answer-feedback" id="book-feedback" aria-live="polite"></p>
+
+        <details class="hint">
+          <summary>Hint 1</summary>
+          <p>The shelf is not asking for alphabetical order.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 2</summary>
+          <p>Some titles count without using digits.</p>
+        </details>
+        <details class="hint">
+          <summary>Hint 3</summary>
+          <p>Read the first letters of the chosen spines.</p>
+        </details>
+      </section>
+    </main>
+
+    <script>
+      const books = [
+        { title: "The Midnight Index", code: "", color: "blue" },
+        { title: "Practical Dating for Singles", code: "P", color: "red" },
+        { title: "A Double Life for Denis and Roger", code: "A", color: "green" },
+        { title: "The Library Beneath Thursday", code: "", color: "black" },
+        { title: "Geometry of Triangles and Tribulations", code: "G", color: "gold" },
+        { title: "Extreme Quad Exercises for the Destined Athlete", code: "E", color: "purple" },
+        { title: "A Quiet Catalogue of Storms", code: "", color: "blue" },
+        { title: "Star Pentagrams and Other Signs", code: "S", color: "green" },
+        { title: "Cabinet of Borrowed Names", code: "", color: "red" },
+      ];
+      const solution = "PAGES";
+      const chosen = [];
+      const bookcase = document.querySelector("#bookcase");
+      const codeElement = document.querySelector("#book-code");
+      const feedback = document.querySelector("#book-feedback");
+      const clearButton = document.querySelector("#clear-books");
+
+      const renderBooks = () => {
+        bookcase.innerHTML = "";
+        books.forEach((book, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `book-spine ${book.color}`;
+          button.textContent = book.title;
+          button.dataset.index = String(index);
+          button.setAttribute("aria-pressed", chosen.includes(index) ? "true" : "false");
+          if (chosen.includes(index)) {
+            button.classList.add("selected");
+          }
+          button.addEventListener("click", () => toggleBook(index));
+          bookcase.appendChild(button);
+        });
+      };
+
+      const updateBookCode = () => {
+        const code = chosen.map((index) => books[index].code).join("");
+        codeElement.textContent = code.padEnd(solution.length, "-").slice(0, Math.max(solution.length, code.length)).toUpperCase();
+
+        if (code === solution) {
+          feedback.textContent = "Correct.";
+          feedback.className = "answer-feedback success";
+        } else if (chosen.length >= solution.length) {
+          feedback.textContent = "Not quite.";
+          feedback.className = "answer-feedback error";
+        } else {
+          feedback.textContent = "";
+          feedback.className = "answer-feedback";
+        }
+      };
+
+      const toggleBook = (index) => {
+        const existingIndex = chosen.indexOf(index);
+        if (existingIndex >= 0) {
+          chosen.splice(existingIndex, 1);
+        } else {
+          chosen.push(index);
+        }
+
+        renderBooks();
+        updateBookCode();
+      };
+
+      clearButton.addEventListener("click", () => {
+        chosen.splice(0, chosen.length);
+        renderBooks();
+        updateBookCode();
+      });
+
+      renderBooks();
+      updateBookCode();
+    </script>
+  </body>
+</html>
