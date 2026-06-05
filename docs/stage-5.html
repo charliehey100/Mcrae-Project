@@ -20,136 +20,125 @@
 
     <main class="stage-shell" aria-labelledby="stage-title">
       <section class="stage-intro compact">
-        <h1 id="stage-title">Stage Five - Mum</h1>
+        <h1 id="stage-title">Stage Five - Anna</h1>
       </section>
 
-      <section class="video-panel" aria-label="Mum birthday message">
+      <section class="video-panel" aria-label="Anna birthday message">
         <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
-          <source src="assets/videos/mum-message.mp4" type="video/mp4">
+          <source src="assets/videos/anna-message.mp4" type="video/mp4">
           Your browser does not support embedded video.
         </video>
         <p class="video-note">
           Placeholder video slot: replace
-          <code>assets/videos/mum-message.mp4</code> once the recording is ready.
+          <code>assets/videos/anna-message.mp4</code> once the recording is ready.
         </p>
       </section>
 
       <section class="answer-panel" aria-label="Stage five puzzle">
-        <article class="transcript-card" aria-label="Transcript">
-          <div class="transcript-paper" id="transcript"></div>
-        </article>
-
-        <div class="word-lock" aria-live="polite">
-          <span id="marked-code">------</span>
-          <button type="button" id="clear-transcript">Clear</button>
+        <div class="page-reader">
+          <div class="book-page" id="book-page" aria-live="polite">
+            <div class="page-number" id="page-number"></div>
+            <div class="poem-page" id="poem-page"></div>
+          </div>
+          <div class="page-actions">
+            <button type="button" id="previous-page">Previous page</button>
+            <button type="button" id="next-page">Next page</button>
+          </div>
         </div>
-        <p class="answer-feedback" id="mum-feedback" aria-live="polite"></p>
-
-        <details class="hint">
-          <summary>Hint 1</summary>
-          <p>Some memories sound warmer than they are accurate.</p>
-        </details>
-        <details class="hint">
-          <summary>Hint 2</summary>
-          <p>Mark the details that do not belong.</p>
-        </details>
-        <details class="hint">
-          <summary>Hint 3</summary>
-          <p>Read the first letters in the order they appear.</p>
-        </details>
       </section>
     </main>
 
     <script>
-      const transcript = [
-        "P.S.",
-        "I had this funny dream about you last night. I tried to write it down quickly, but some of the details are jumbled. I'm not sure which ones, though.",
-        "You were in the backyard, drinking soda with your childhood black dog, Harold. I was sure it was your birthday, because the calendar said August.",
-        "But that's when your friend from primary school, Xavier Dunning, rocked up, right before the ostrich arrived and explained that you had turned into a wizard.",
-        "Love you!",
+      const basePoem = [
+        "Fox in a box, the clock clicks twice,",
+        "Keys sleep under paper and dice.",
+        "One room hums while another one waits,",
+        "Candles lean toward hidden gates.",
+        "If the page is wrong, retrace the track,",
+        "If nothing has shifted, do not look back.",
       ];
-      const solution = "shadow";
-      const selected = new Set();
-      const transcriptElement = document.querySelector("#transcript");
-      const codeElement = document.querySelector("#marked-code");
-      const feedback = document.querySelector("#mum-feedback");
-      const clearButton = document.querySelector("#clear-transcript");
+      const pages = [
+        { type: "normal" },
+        { type: "anomaly", variant: "caps" },
+        { type: "normal" },
+        { type: "anomaly", variant: "misspell" },
+        { type: "normal" },
+        { type: "anomaly", variant: "small" },
+        { type: "anomaly", variant: "synonym" },
+        { type: "normal" },
+        { type: "anomaly", variant: "meta" },
+        { type: "complete" },
+      ];
+      const pageNumber = document.querySelector("#page-number");
+      const bookPage = document.querySelector("#book-page");
+      const poemPage = document.querySelector("#poem-page");
+      const previousButton = document.querySelector("#previous-page");
+      const nextButton = document.querySelector("#next-page");
+      let currentPage = 0;
 
-      const wordPattern = /[A-Za-z]+(?:'[A-Za-z]+)?|[^A-Za-z]+/g;
-      const renderTranscript = () => {
-        transcriptElement.innerHTML = "";
+      const getLines = (page) => {
+        if (page.variant === "caps") {
+          return basePoem.map((line) => line.toUpperCase());
+        }
+        if (page.variant === "misspell") {
+          return basePoem.map((line) => line.replace("Candles", "Candels"));
+        }
+        if (page.variant === "synonym") {
+          return basePoem.map((line) => line.replace("hidden", "secret"));
+        }
+        return basePoem;
+      };
 
-        transcript.forEach((paragraph, paragraphIndex) => {
+      const render = () => {
+        const page = pages[currentPage];
+        pageNumber.textContent = `Page ${currentPage + 1}`;
+        bookPage.className = "book-page";
+        poemPage.className = "poem-page";
+        poemPage.innerHTML = "";
+
+        if (page.type === "complete") {
+          bookPage.classList.add("complete");
+          poemPage.innerHTML = "<p>You found the way through.</p><p>The next page is waiting.</p>";
+          previousButton.disabled = true;
+          nextButton.textContent = "Next page";
+          return;
+        }
+
+        if (page.variant) {
+          bookPage.classList.add(`anomaly-${page.variant}`);
+          poemPage.classList.add(`anomaly-${page.variant}`);
+        }
+
+        getLines(page).forEach((line) => {
           const p = document.createElement("p");
-          const parts = paragraph.match(wordPattern) || [];
-          let wordIndex = 0;
-
-          parts.forEach((part) => {
-            if (/^[A-Za-z]/.test(part)) {
-              const button = document.createElement("button");
-              const id = `${paragraphIndex}-${wordIndex}`;
-              button.type = "button";
-              button.className = "transcript-word";
-              button.textContent = part;
-              button.dataset.word = part;
-              button.dataset.wordId = id;
-              button.setAttribute("aria-pressed", selected.has(id) ? "true" : "false");
-              if (selected.has(id)) {
-                button.classList.add("selected");
-              }
-              button.addEventListener("click", () => toggleWord(id));
-              p.appendChild(button);
-              wordIndex += 1;
-            } else {
-              p.append(part);
-            }
-          });
-
-          transcriptElement.appendChild(p);
+          p.textContent = line;
+          poemPage.appendChild(p);
         });
+
+        previousButton.disabled = currentPage === 0;
+        nextButton.textContent = "Next page";
       };
 
-      const getMarkedCode = () => {
-        return [...document.querySelectorAll(".transcript-word.selected")]
-          .map((word) => word.dataset.word[0].toLowerCase())
-          .join("");
-      };
+      const turnPage = (direction) => {
+        const page = pages[currentPage];
 
-      const updateCode = () => {
-        const code = getMarkedCode();
-        codeElement.textContent = code.padEnd(solution.length, "-").slice(0, Math.max(solution.length, code.length)).toUpperCase();
-
-        if (code === solution) {
-          feedback.textContent = "Correct.";
-          feedback.className = "answer-feedback success";
-        } else if (code.length >= solution.length) {
-          feedback.textContent = "Not quite.";
-          feedback.className = "answer-feedback error";
-        } else {
-          feedback.textContent = "";
-          feedback.className = "answer-feedback";
-        }
-      };
-
-      const toggleWord = (id) => {
-        if (selected.has(id)) {
-          selected.delete(id);
-        } else {
-          selected.add(id);
+        if (page.type === "complete" && direction === "next") {
+          window.location.href = "stage-6.html";
+          return;
         }
 
-        renderTranscript();
-        updateCode();
+        if (page.type === "anomaly") {
+          currentPage = direction === "previous" ? currentPage + 1 : 0;
+        } else {
+          currentPage = direction === "next" ? currentPage + 1 : 0;
+        }
+
+        render();
       };
 
-      clearButton.addEventListener("click", () => {
-        selected.clear();
-        renderTranscript();
-        updateCode();
-      });
-
-      renderTranscript();
-      updateCode();
+      previousButton.addEventListener("click", () => turnPage("previous"));
+      nextButton.addEventListener("click", () => turnPage("next"));
+      render();
     </script>
   </body>
 </html>

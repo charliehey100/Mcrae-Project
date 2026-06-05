@@ -20,116 +20,73 @@
 
     <main class="stage-shell" aria-labelledby="stage-title">
       <section class="stage-intro compact">
-        <h1 id="stage-title">Stage Six - Anna</h1>
+        <h1 id="stage-title">Stage Six - Charlie</h1>
       </section>
 
-      <section class="video-panel" aria-label="Anna birthday message">
-        <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
-          <source src="assets/videos/anna-message.mp4" type="video/mp4">
-          Your browser does not support embedded video.
-        </video>
+      <section class="video-panel" aria-label="Charlie birthday message">
+        <div class="video-frame">
+          <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
+            <source src="assets/videos/charlie-message.mp4" type="video/mp4">
+            Your browser does not support embedded video.
+          </video>
+          <a
+            class="fake-download"
+            href="downloads/clue-packet-placeholder.txt"
+            download="birthday_final_FINAL_v3_PLACEHOLDER.txt"
+            aria-label="Download suspicious birthday file"
+          >
+            Download
+          </a>
+        </div>
         <p class="video-note">
           Placeholder video slot: replace
-          <code>assets/videos/anna-message.mp4</code> once the recording is ready.
+          <code>assets/videos/charlie-message.mp4</code> once the recording is ready.
+          The overlay button currently downloads a local placeholder clue file.
         </p>
       </section>
 
       <section class="answer-panel" aria-label="Stage six puzzle">
-        <div class="bookcase" id="bookcase" aria-label="Book shelf"></div>
-
-        <div class="word-lock" aria-live="polite">
-          <span id="book-code">-----</span>
-          <button type="button" id="clear-books">Clear</button>
-        </div>
-        <p class="answer-feedback" id="book-feedback" aria-live="polite"></p>
+        <form class="answer-form" id="arg-form">
+          <label for="arg-answer">Keyword</label>
+          <div class="answer-row">
+            <input id="arg-answer" name="answer" type="text" autocomplete="off">
+            <button type="submit">Unlock</button>
+          </div>
+        </form>
+        <p class="answer-feedback" id="arg-feedback" aria-live="polite"></p>
 
         <details class="hint">
           <summary>Hint 1</summary>
-          <p>The shelf is not asking for alphabetical order.</p>
+          <p>Something on top of the video does not belong to the video.</p>
         </details>
         <details class="hint">
           <summary>Hint 2</summary>
-          <p>Some titles count without using digits.</p>
+          <p>The downloaded file is only the first breadcrumb.</p>
         </details>
         <details class="hint">
           <summary>Hint 3</summary>
-          <p>Read the first letters of the chosen spines.</p>
+          <p>For now, the development keyword is placeholder.</p>
         </details>
       </section>
     </main>
 
     <script>
-      const books = [
-        { title: "The Midnight Index", code: "", color: "blue" },
-        { title: "Practical Dating for Singles", code: "P", color: "red" },
-        { title: "A Double Life for Denis and Roger", code: "A", color: "green" },
-        { title: "The Library Beneath Thursday", code: "", color: "black" },
-        { title: "Geometry of Triangles and Tribulations", code: "G", color: "gold" },
-        { title: "Extreme Quad Exercises for the Destined Athlete", code: "E", color: "purple" },
-        { title: "A Quiet Catalogue of Storms", code: "", color: "blue" },
-        { title: "Star Pentagrams and Other Signs", code: "S", color: "green" },
-        { title: "Cabinet of Borrowed Names", code: "", color: "red" },
-      ];
-      const solution = "PAGES";
-      const chosen = [];
-      const bookcase = document.querySelector("#bookcase");
-      const codeElement = document.querySelector("#book-code");
-      const feedback = document.querySelector("#book-feedback");
-      const clearButton = document.querySelector("#clear-books");
+      const form = document.querySelector("#arg-form");
+      const input = document.querySelector("#arg-answer");
+      const feedback = document.querySelector("#arg-feedback");
 
-      const renderBooks = () => {
-        bookcase.innerHTML = "";
-        books.forEach((book, index) => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = `book-spine ${book.color}`;
-          button.textContent = book.title;
-          button.dataset.index = String(index);
-          button.setAttribute("aria-pressed", chosen.includes(index) ? "true" : "false");
-          if (chosen.includes(index)) {
-            button.classList.add("selected");
-          }
-          button.addEventListener("click", () => toggleBook(index));
-          bookcase.appendChild(button);
-        });
-      };
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const answer = input.value.trim().toLowerCase();
 
-      const updateBookCode = () => {
-        const code = chosen.map((index) => books[index].code).join("");
-        codeElement.textContent = code.padEnd(solution.length, "-").slice(0, Math.max(solution.length, code.length)).toUpperCase();
-
-        if (code === solution) {
-          feedback.textContent = "Correct.";
+        if (answer === "placeholder") {
+          feedback.textContent = "Correct. ARG endpoint placeholder reached.";
           feedback.className = "answer-feedback success";
-        } else if (chosen.length >= solution.length) {
-          feedback.textContent = "Not quite.";
+        } else {
+          feedback.textContent = "Not yet.";
           feedback.className = "answer-feedback error";
-        } else {
-          feedback.textContent = "";
-          feedback.className = "answer-feedback";
         }
-      };
-
-      const toggleBook = (index) => {
-        const existingIndex = chosen.indexOf(index);
-        if (existingIndex >= 0) {
-          chosen.splice(existingIndex, 1);
-        } else {
-          chosen.push(index);
-        }
-
-        renderBooks();
-        updateBookCode();
-      };
-
-      clearButton.addEventListener("click", () => {
-        chosen.splice(0, chosen.length);
-        renderBooks();
-        updateBookCode();
       });
-
-      renderBooks();
-      updateBookCode();
     </script>
   </body>
 </html>
