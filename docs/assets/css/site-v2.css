@@ -421,6 +421,23 @@ code {
 .page-reader {
   display: grid;
   gap: 18px;
+  position: relative;
+}
+
+.page-reader::after {
+  background: #020305;
+  border-radius: 8px;
+  content: "";
+  inset: -8px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity 180ms ease;
+  z-index: 3;
+}
+
+.page-reader.turning::after {
+  opacity: 1;
 }
 
 .book-page {

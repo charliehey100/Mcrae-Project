@@ -20,142 +20,136 @@
 
     <main class="stage-shell" aria-labelledby="stage-title">
       <section class="stage-intro compact">
-        <h1 id="stage-title">Stage Three - Oscar</h1>
+        <h1 id="stage-title">Stage Three - Mum</h1>
       </section>
 
-      <section class="video-panel" aria-label="Oscar birthday message">
+      <section class="video-panel" aria-label="Mum birthday message">
         <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
-          <source src="assets/videos/oscar-message.mp4" type="video/mp4">
+          <source src="assets/videos/mum-message.mp4" type="video/mp4">
           Your browser does not support embedded video.
         </video>
         <p class="video-note">
           Placeholder video slot: replace
-          <code>assets/videos/oscar-message.mp4</code> once the recording is ready.
+          <code>assets/videos/mum-message.mp4</code> once the recording is ready.
         </p>
       </section>
 
       <section class="answer-panel" aria-label="Stage three puzzle">
-        <div class="movement-layout">
-          <div class="movement-grid" id="movement-grid" aria-label="Movement grid"></div>
-          <div class="movement-status">
-            <p class="kicker">Trace</p>
-            <strong id="step-count">--------</strong>
-            <p id="movement-feedback" class="answer-feedback" aria-live="polite"></p>
-            <div class="arrow-pad" aria-label="Arrow key fallback controls">
-              <button type="button" data-direction="up" aria-label="Move up">U</button>
-              <button type="button" data-direction="left" aria-label="Move left">L</button>
-              <button type="button" data-direction="down" aria-label="Move down">D</button>
-              <button type="button" data-direction="right" aria-label="Move right">R</button>
-            </div>
-          </div>
+        <article class="transcript-card" aria-label="Transcript">
+          <div class="transcript-paper" id="transcript"></div>
+        </article>
+
+        <div class="word-lock" aria-live="polite">
+          <span id="marked-code">------</span>
+          <button type="button" id="clear-transcript">Clear</button>
         </div>
+        <p class="answer-feedback" id="mum-feedback" aria-live="polite"></p>
 
         <details class="hint">
           <summary>Hint 1</summary>
-          <p>The video gives directions. Watch his eyes, not his mouth.</p>
+          <p>Some memories sound warmer than they are accurate.</p>
         </details>
         <details class="hint">
           <summary>Hint 2</summary>
-          <p>The trace only remembers the most recent eight moves.</p>
+          <p>Mark the details that do not belong.</p>
         </details>
         <details class="hint">
           <summary>Hint 3</summary>
-          <p>There is no meaningful start or finish square.</p>
+          <p>Read the first letters in the order they appear.</p>
         </details>
       </section>
     </main>
 
     <script>
-      const size = 7;
-      const start = { x: 3, y: 3 };
-      const solution = [
-        "up",
-        "right",
-        "left",
-        "up",
-        "down",
-        "right",
-        "down",
-        "left",
+      const transcript = [
+        "P.S.",
+        "I had this funny dream about you last night. I tried to write it down quickly, but some of the details are jumbled. I'm not sure which ones, though.",
+        "You were in the backyard, drinking soda with your childhood black dog, Harold. I was sure it was your birthday, because the calendar said August.",
+        "But that's when your friend from primary school, Xavier Dunning, rocked up, right before the ostrich arrived and explained that you had turned into a wizard.",
+        "Love you!",
       ];
-      const symbols = {
-        up: "U",
-        down: "D",
-        left: "L",
-        right: "R",
-      };
-      const deltas = {
-        up: { x: 0, y: -1 },
-        down: { x: 0, y: 1 },
-        left: { x: -1, y: 0 },
-        right: { x: 1, y: 0 },
-      };
-      const grid = document.querySelector("#movement-grid");
-      const count = document.querySelector("#step-count");
-      const feedback = document.querySelector("#movement-feedback");
-      let position = { ...start };
-      let trace = [];
-      let unlocked = false;
+      const solution = "shadow";
+      const selected = new Set();
+      const transcriptElement = document.querySelector("#transcript");
+      const codeElement = document.querySelector("#marked-code");
+      const feedback = document.querySelector("#mum-feedback");
+      const clearButton = document.querySelector("#clear-transcript");
 
-      const render = () => {
-        grid.innerHTML = "";
-        for (let y = 0; y < size; y += 1) {
-          for (let x = 0; x < size; x += 1) {
-            const tile = document.createElement("div");
-            tile.className = "movement-tile";
-            if (x === position.x && y === position.y) {
-              tile.classList.add("current");
+      const wordPattern = /[A-Za-z]+(?:'[A-Za-z]+)?|[^A-Za-z]+/g;
+      const renderTranscript = () => {
+        transcriptElement.innerHTML = "";
+
+        transcript.forEach((paragraph, paragraphIndex) => {
+          const p = document.createElement("p");
+          const parts = paragraph.match(wordPattern) || [];
+          let wordIndex = 0;
+
+          parts.forEach((part) => {
+            if (/^[A-Za-z]/.test(part)) {
+              const button = document.createElement("button");
+              const id = `${paragraphIndex}-${wordIndex}`;
+              button.type = "button";
+              button.className = "transcript-word";
+              button.textContent = part;
+              button.dataset.word = part;
+              button.dataset.wordId = id;
+              button.setAttribute("aria-pressed", selected.has(id) ? "true" : "false");
+              if (selected.has(id)) {
+                button.classList.add("selected");
+              }
+              button.addEventListener("click", () => toggleWord(id));
+              p.appendChild(button);
+              wordIndex += 1;
+            } else {
+              p.append(part);
             }
-            grid.appendChild(tile);
-          }
-        }
-        count.textContent = trace.map((direction) => symbols[direction]).join("").padStart(solution.length, "-");
+          });
+
+          transcriptElement.appendChild(p);
+        });
       };
 
-      const move = (direction) => {
-        if (unlocked) return;
+      const getMarkedCode = () => {
+        return [...document.querySelectorAll(".transcript-word.selected")]
+          .map((word) => word.dataset.word[0].toLowerCase())
+          .join("");
+      };
 
-        position = {
-          x: (position.x + deltas[direction].x + size) % size,
-          y: (position.y + deltas[direction].y + size) % size,
-        };
+      const updateCode = () => {
+        const code = getMarkedCode();
+        codeElement.textContent = code.padEnd(solution.length, "-").slice(0, Math.max(solution.length, code.length)).toUpperCase();
 
-        trace.push(direction);
-        if (trace.length > solution.length) {
-          trace = trace.slice(trace.length - solution.length);
-        }
-
-        feedback.textContent = "";
-        feedback.className = "answer-feedback";
-
-        if (trace.join("|") === solution.join("|")) {
-          unlocked = true;
+        if (code === solution) {
           feedback.innerHTML = "Correct. <a href=\"stage-4.html\">Continue to Stage Four</a>.";
           feedback.className = "answer-feedback success";
+        } else if (code.length >= solution.length) {
+          feedback.textContent = "Not quite.";
+          feedback.className = "answer-feedback error";
+        } else {
+          feedback.textContent = "";
+          feedback.className = "answer-feedback";
         }
-
-        render();
       };
 
-      document.addEventListener("keydown", (event) => {
-        const keyMap = {
-          ArrowUp: "up",
-          ArrowDown: "down",
-          ArrowLeft: "left",
-          ArrowRight: "right",
-        };
-        const direction = keyMap[event.key];
-        if (direction) {
-          event.preventDefault();
-          move(direction);
+      const toggleWord = (id) => {
+        if (selected.has(id)) {
+          selected.delete(id);
+        } else {
+          selected.add(id);
         }
+
+        renderTranscript();
+        updateCode();
+      };
+
+      clearButton.addEventListener("click", () => {
+        selected.clear();
+        renderTranscript();
+        updateCode();
       });
 
-      document.querySelectorAll("[data-direction]").forEach((button) => {
-        button.addEventListener("click", () => move(button.dataset.direction));
-      });
-
-      render();
+      renderTranscript();
+      updateCode();
     </script>
   </body>
 </html>
