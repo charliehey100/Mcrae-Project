@@ -418,6 +418,60 @@ code {
   background: rgba(247, 239, 224, 0.08);
 }
 
+.roman-lock {
+  display: grid;
+  gap: 18px;
+}
+
+.roman-display {
+  background: rgba(247, 239, 224, 0.08);
+  border: 1px solid rgba(247, 239, 224, 0.22);
+  border-radius: 6px;
+  color: var(--gold-bright);
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  min-height: 72px;
+  padding: 16px;
+  text-align: center;
+}
+
+.roman-keypad {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.roman-keypad button,
+.roman-actions button {
+  background: linear-gradient(180deg, rgba(247, 239, 224, 0.13), rgba(247, 239, 224, 0.07));
+  border: 1px solid rgba(240, 199, 118, 0.34);
+  border-radius: 6px;
+  color: var(--paper);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  min-height: 58px;
+}
+
+.roman-keypad button:hover,
+.roman-keypad button:focus-visible,
+.roman-actions button:hover,
+.roman-actions button:focus-visible {
+  background: rgba(240, 199, 118, 0.2);
+  border-color: var(--gold-bright);
+}
+
+.roman-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.roman-actions button {
+  min-width: 128px;
+}
+
 .page-reader {
   display: grid;
   gap: 18px;

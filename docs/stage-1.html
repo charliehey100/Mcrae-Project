@@ -20,254 +20,102 @@
 
     <main class="stage-shell" aria-labelledby="stage-title">
       <section class="stage-intro compact">
-        <h1 id="stage-title">Stage One - The Boss</h1>
+        <h1 id="stage-title">Stage One - Lila</h1>
       </section>
 
-      <section class="video-panel" aria-label="Manager birthday briefing">
+      <section class="video-panel" aria-label="Lila birthday message">
         <video controls preload="metadata" poster="assets/images/video-placeholder.svg">
-          <source src="assets/videos/manager-message.mp4" type="video/mp4">
+          <source src="assets/videos/lila-message.mp4" type="video/mp4">
           Your browser does not support embedded video.
         </video>
         <p class="video-note">
           Placeholder video slot: replace
-          <code>assets/videos/manager-message.mp4</code> once the recording is ready.
+          <code>assets/videos/lila-message.mp4</code> once the recording is ready.
         </p>
       </section>
 
       <section class="answer-panel" aria-label="Stage one puzzle">
-        <section class="email-card" aria-label="Unread email">
-          <div class="email-toolbar">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="roman-lock">
+          <div class="roman-display" id="roman-display" aria-live="polite">----</div>
+          <div class="roman-keypad" aria-label="Roman numeral keypad">
+            <button type="button" data-value="1">I</button>
+            <button type="button" data-value="2">II</button>
+            <button type="button" data-value="3">III</button>
+            <button type="button" data-value="4">IV</button>
+            <button type="button" data-value="5">V</button>
+            <button type="button" data-value="6">VI</button>
+            <button type="button" data-value="7">VII</button>
+            <button type="button" data-value="8">VIII</button>
+            <button type="button" data-value="9">IX</button>
           </div>
-          <div class="email-meta">
-            <p class="email-from">From: Operations Desk</p>
-            <p class="email-subject">Subject: final room order still broken</p>
-            <p class="email-time">Sent: 11:58 PM</p>
+          <div class="roman-actions">
+            <button type="button" id="clear-code">Clear</button>
           </div>
-          <div class="email-body">
-            <p>Leaving this here before the birthday lock goes live.</p>
-            <p>
-              The room list has torn itself off the board again. Nine rooms,
-              nine hourly spaces, no missing bookings. The order matters.
-            </p>
-            <ul>
-              <li>The only room after Zodiac Killer is The Chamber of Lost Legends.</li>
-              <li>Wild West Saloon is caught between Mastermind Heist and Zodiac Killer.</li>
-              <li>The two Z rooms have exactly two bookings between them.</li>
-              <li>The Other Side is immediately before the earlier Z room.</li>
-              <li>Nikola Tesla's Mystery touches both Prison Break and The Other Side.</li>
-              <li>Bunker is somewhere before Prison Break.</li>
-            </ul>
-            <p>Do not forward this. He likes this sort of thing far too much.</p>
-          </div>
-        </section>
-
-        <div class="booking-board" id="booking-board">
-          <div class="booking-slots" aria-label="Booking order slots">
-            <div class="booking-slot" data-slot="0"><span>1</span></div>
-            <div class="booking-slot" data-slot="1"><span>2</span></div>
-            <div class="booking-slot" data-slot="2"><span>3</span></div>
-            <div class="booking-slot" data-slot="3"><span>4</span></div>
-            <div class="booking-slot" data-slot="4"><span>5</span></div>
-            <div class="booking-slot" data-slot="5"><span>6</span></div>
-            <div class="booking-slot" data-slot="6"><span>7</span></div>
-            <div class="booking-slot" data-slot="7"><span>8</span></div>
-            <div class="booking-slot" data-slot="8"><span>9</span></div>
-          </div>
-
-          <div class="booking-pool" id="booking-pool" aria-label="Loose bookings"></div>
-        </div>
-
-        <div class="board-actions">
-          <button type="button" id="check-board">Check order</button>
-          <button type="button" class="secondary-button" id="reset-board">Reset</button>
         </div>
         <p class="answer-feedback" id="stage-one-feedback" aria-live="polite"></p>
 
         <details class="hint">
           <summary>Hint 1</summary>
-          <p>The first clue fixes the final two bookings.</p>
+          <p>Some birthday wishes count more than others.</p>
         </details>
         <details class="hint">
           <summary>Hint 2</summary>
-          <p>Wild West Saloon is trapped between Mastermind Heist and Zodiac Killer.</p>
-        </details>
-        <details class="hint">
-          <summary>Hint 3</summary>
-          <p>Once you know where Zombie Lab goes, work backward through The Other Side and Nikola Tesla's Mystery.</p>
+          <p>Listen for numbers, then keep their order.</p>
         </details>
       </section>
     </main>
 
     <script>
-      const rooms = [
-        "Prison Break",
-        "Zombie Lab",
-        "Bunker",
-        "Mastermind Heist",
-        "Zodiac Killer",
-        "The Other Side",
-        "Wild West Saloon",
-        "Nikola Tesla's Mystery",
-        "The Chamber of Lost Legends",
-      ];
-      const solution = [
-        "Bunker",
-        "Prison Break",
-        "Nikola Tesla's Mystery",
-        "The Other Side",
-        "Zombie Lab",
-        "Mastermind Heist",
-        "Wild West Saloon",
-        "Zodiac Killer",
-        "The Chamber of Lost Legends",
-      ];
-      const pool = document.querySelector("#booking-pool");
-      const slots = [...document.querySelectorAll(".booking-slot")];
-      const checkButton = document.querySelector("#check-board");
-      const resetButton = document.querySelector("#reset-board");
+      const solution = "3521";
+      const numerals = {
+        1: "I",
+        2: "II",
+        3: "III",
+        4: "IV",
+        5: "V",
+        6: "VI",
+        7: "VII",
+        8: "VIII",
+        9: "IX",
+      };
+      const display = document.querySelector("#roman-display");
       const feedback = document.querySelector("#stage-one-feedback");
-      let draggedCard = null;
-      let selectedCard = null;
+      const clearButton = document.querySelector("#clear-code");
+      let entry = "";
 
-      const makeCard = (room) => {
-        const card = document.createElement("button");
-        card.type = "button";
-        card.className = "booking-card";
-        card.draggable = true;
-        card.textContent = room;
-        card.dataset.room = room;
-
-        card.addEventListener("dragstart", (event) => {
-          draggedCard = card;
-          event.dataTransfer.setData("text/plain", room);
-          card.classList.add("dragging");
-        });
-
-        card.addEventListener("dragend", () => {
-          draggedCard = null;
-          card.classList.remove("dragging");
-        });
-
-        card.addEventListener("click", () => {
-          if (selectedCard === card) {
-            selectedCard.classList.remove("selected");
-            selectedCard = null;
-            return;
-          }
-
-          if (selectedCard) {
-            selectedCard.classList.remove("selected");
-          }
-
-          selectedCard = card;
-          selectedCard.classList.add("selected");
-        });
-
-        return card;
+      const render = () => {
+        display.textContent = entry
+          ? entry.split("").map((digit) => numerals[digit]).join(" ")
+          : "----";
       };
 
-      const placeCard = (card, target) => {
-        if (!card || !target) return;
-
-        const existingCard = target.querySelector(".booking-card");
-        const originalParent = card.parentElement;
-
-        if (existingCard && existingCard !== card) {
-          originalParent.appendChild(existingCard);
-        }
-
-        target.appendChild(card);
-        card.classList.remove("selected");
-        selectedCard = null;
+      const submitDigit = (digit) => {
+        entry = `${entry}${digit}`.slice(-solution.length);
         feedback.textContent = "";
         feedback.className = "answer-feedback";
-      };
+        render();
 
-      const resetBoard = () => {
-        selectedCard = null;
-        pool.innerHTML = "";
-        slots.forEach((slot) => {
-          const label = slot.querySelector("span");
-          slot.innerHTML = "";
-          slot.appendChild(label);
-        });
-
-        rooms.forEach((room) => {
-          pool.appendChild(makeCard(room));
-        });
-
-        feedback.textContent = "";
-        feedback.className = "answer-feedback";
-      };
-
-      slots.forEach((slot) => {
-        slot.addEventListener("dragover", (event) => {
-          event.preventDefault();
-          slot.classList.add("ready");
-        });
-
-        slot.addEventListener("dragleave", () => {
-          slot.classList.remove("ready");
-        });
-
-        slot.addEventListener("drop", (event) => {
-          event.preventDefault();
-          slot.classList.remove("ready");
-          placeCard(draggedCard, slot);
-        });
-
-        slot.addEventListener("click", () => {
-          placeCard(selectedCard, slot);
-        });
-      });
-
-      pool.addEventListener("dragover", (event) => {
-        event.preventDefault();
-      });
-
-      pool.addEventListener("drop", (event) => {
-        event.preventDefault();
-        if (draggedCard) {
-          pool.appendChild(draggedCard);
-          draggedCard = null;
-        }
-        feedback.textContent = "";
-        feedback.className = "answer-feedback";
-      });
-
-      pool.addEventListener("click", (event) => {
-        if (event.target === pool && selectedCard) {
-          pool.appendChild(selectedCard);
-          selectedCard.classList.remove("selected");
-          selectedCard = null;
-          feedback.textContent = "";
-          feedback.className = "answer-feedback";
-        }
-      });
-
-      checkButton.addEventListener("click", () => {
-        const attempt = slots.map((slot) => slot.querySelector(".booking-card")?.dataset.room ?? "");
-        const isComplete = attempt.every(Boolean);
-        const isCorrect = attempt.every((room, index) => room === solution[index]);
-
-        if (isCorrect) {
-          feedback.innerHTML = "Correct. The next message belongs to Oscar. <a href=\"stage-2.html\">Continue to Stage Two</a>.";
+        if (entry === solution) {
+          feedback.innerHTML = "Correct. <a href=\"stage-2.html\">Continue to Stage Two</a>.";
           feedback.className = "answer-feedback success";
-        } else if (!isComplete) {
-          feedback.textContent = "Not yet. Every hourly slot needs a booking.";
-          feedback.className = "answer-feedback error";
-        } else {
-          feedback.textContent = "Not yet. The bookings are still out of order.";
+        } else if (entry.length === solution.length) {
+          feedback.textContent = "Not quite.";
           feedback.className = "answer-feedback error";
         }
+      };
+
+      document.querySelectorAll("[data-value]").forEach((button) => {
+        button.addEventListener("click", () => submitDigit(button.dataset.value));
       });
 
-      resetButton.addEventListener("click", resetBoard);
+      clearButton.addEventListener("click", () => {
+        entry = "";
+        feedback.textContent = "";
+        feedback.className = "answer-feedback";
+        render();
+      });
 
-      resetBoard();
+      render();
     </script>
   </body>
 </html>
