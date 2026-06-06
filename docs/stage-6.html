@@ -67,7 +67,15 @@
           feedback.className = "answer-feedback";
           endScreen.removeAttribute("aria-hidden");
           document.body.classList.add("ending");
-          endScreen.classList.add("active");
+          endScreen.className = "end-screen active lead";
+
+          window.setTimeout(() => {
+            endScreen.classList.add("pause");
+          }, 2800);
+
+          window.setTimeout(() => {
+            endScreen.className = "end-screen active final";
+          }, 4300);
         } else {
           feedback.textContent = "Not yet.";
           feedback.className = "answer-feedback error";
