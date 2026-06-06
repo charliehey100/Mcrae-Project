@@ -7,18 +7,7 @@
     <link rel="stylesheet" href="assets/css/site-v2.css">
   </head>
   <body class="stage-page">
-    <nav class="dev-stage-nav" aria-label="Development stage selector">
-      <span>Dev</span>
-      <a href="index.html">Home</a>
-      <a href="stage-1.html">1</a>
-      <a href="stage-2.html">2</a>
-      <a href="stage-3.html">3</a>
-      <a href="stage-4.html">4</a>
-      <a href="stage-5.html">5</a>
-      <a href="stage-6.html">6</a>
-    </nav>
-
-    <main class="stage-shell" aria-labelledby="stage-title">
+<main class="stage-shell" aria-labelledby="stage-title">
       <section class="stage-intro compact">
         <h1 id="stage-title">Stage Six - Charlie</h1>
       </section>
@@ -39,22 +28,9 @@
             <span aria-hidden="true"></span>
           </a>
         </div>
-        <p class="video-note">
-          Placeholder video slot: replace
-          <code>assets/videos/charlie-message.mp4</code> once the recording is ready.
-          The small download icon saves the same video with the first clue in its filename.
-        </p>
       </section>
 
       <section class="answer-panel" aria-label="Stage six puzzle">
-        <div class="arg-brief">
-          <p class="kicker">ARG trail</p>
-          <p>
-            Follow the downloaded clue outward, collect the final keyword, then
-            return here to unlock the ending.
-          </p>
-        </div>
-
         <form class="answer-form" id="arg-form">
           <label for="arg-answer">Keyword</label>
           <div class="answer-row">
@@ -64,53 +40,34 @@
         </form>
         <p class="answer-feedback" id="arg-feedback" aria-live="polite"></p>
 
-        <details class="hint">
-          <summary>Hint 1 - Download file</summary>
-          <p>
-            The icon on the video downloads the birthday video. The file's
-            name matters as much as the file itself.
-          </p>
-        </details>
-        <details class="hint">
-          <summary>Hint 2 - Drive folder</summary>
-          <p>
-            A Drive folder ID belongs after <code>drive/folders/</code>. Open
-            the readable file first, then use the riddle answer as a filename.
-            <a href="https://drive.google.com/" target="_blank" rel="noreferrer">Open Google Drive</a>.
-          </p>
-        </details>
-        <details class="hint">
-          <summary>Hint 3 - Jumbled files</summary>
-          <p>
-            Most files in the folder are noise. If the riddle gives you the
-            right file, read that word the right way around. A
-            <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noreferrer">CyberChef</a>
-            reverse operation can help.
-          </p>
-        </details>
-        <details class="hint">
-          <summary>Hint 4 - Original video</summary>
-          <p>
-            If the next word is SPECTROGRAM, inspect the downloaded birthday
-            video with a
-            <a href="https://academo.org/demos/spectrum-analyzer/" target="_blank" rel="noreferrer">spectrogram viewer</a>.
-          </p>
-        </details>
-      </section>
+
+
+</section>
     </main>
+
+    <div class="end-screen" id="end-screen" aria-live="assertive" aria-hidden="true">
+      <p class="end-screen__lead">And your reward is...</p>
+      <p class="end-screen__final">
+        Having us as friends and family! What were you expecting? Happy birthday!
+      </p>
+    </div>
 
     <script>
       const form = document.querySelector("#arg-form");
       const input = document.querySelector("#arg-answer");
       const feedback = document.querySelector("#arg-feedback");
+      const endScreen = document.querySelector("#end-screen");
 
       form.addEventListener("submit", (event) => {
         event.preventDefault();
         const answer = input.value.trim().toLowerCase();
 
         if (answer === "oozwlar") {
-          feedback.textContent = "Correct. ARG endpoint reached.";
-          feedback.className = "answer-feedback success";
+          feedback.textContent = "";
+          feedback.className = "answer-feedback";
+          endScreen.removeAttribute("aria-hidden");
+          document.body.classList.add("ending");
+          endScreen.classList.add("active");
         } else {
           feedback.textContent = "Not yet.";
           feedback.className = "answer-feedback error";

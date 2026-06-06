@@ -1,13 +1,3 @@
-You found the folder. Good.
-
-Most of what is here is just static: spare words, false trails, and file names
-that want attention. Only one file should be opened next.
-
-Riddle:
-
 I show the room but keep no room.
 I copy the face but own no face.
-I make left and right trade places.
-I answer only when you look back.
-
-Open the file named by the answer.
+I can blink, but you'll never catch me.
